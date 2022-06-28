@@ -1,0 +1,439 @@
+0x10個C語言問題 https://creteken.pixnet.net/blog/post/24524138-c%E8%AA%9E%E8%A8%80%E6%B8%AC%E8%A9%A6-%E6%87%89%E7%9F%A5%E9%81%93%E7%9A%840x10%E5%80%8B%E5%9F%BA%E6%9C%AC%E5%95%8F%E9%A1%8C
+DummyH https://dummyh.pixnet.net/blog/category/725962
+Mr. Opengate https://mropengate.blogspot.com/2017/08/cc-c.html
+易春木 https://eeepage.info/category/rd/
+作業系統 https://ocw.nthu.edu.tw/ocw/index.php?page=course&cid=141
+計算機結構 https://hackmd.io/@sysprog/cpu-arch-lecture?type=view
+二元樹: https://zh.m.wikipedia.org/zh-tw/%E4%BA%8C%E5%8F%89%E6%A0%91
+==========================================================================================================================================================================================
+1. Linked List
+    Creat, Insert(Index), Delete(Value, Index), Free, reverse
+    Stack(Array, Linked list)
+    Queue(Array, Linked List)
+Leetcode 160. intersection of two linked list
+LeetCode 21. Merge Two Sorted Lists: 提供一個暫時節點(dummy)，依序將內含值較小的節點串上，最後回傳暫時節點指向的次個節點:  
+    https://hackmd.io/@sysprog/c-linked-list#%E6%A1%88%E4%BE%8B%E6%8E%A2%E8%A8%8E-LeetCode-21-Merge-Two-Sorted-Lists
+==========================================================================================================================================================================================
+2. Bitwise Operation & big/little endian
+ex: 在一個數值中計算幾個bit為1
+    while(x){
+        x&=(x-1);
+        cnt++;
+    }
+ex: bit清除後三碼 x &= (~0)<<3;
+ex: 將一個數值的奇偶bit互換 x = (x & 0xaaaaaaaa) >>1 | (x & 0x55555555) << 1;
+==========================================================================================================================================================================================
+3. Binary search(upper bound, lower bound) => BigO(logn)
+==========================================================================================================================================================================================
+4. Sorting : Bubble, Insertion, Selection, Merge, Quick
+==========================================================================================================================================================================================
+5. function
+    char *strcpy(char *dest, const char *src)
+    參數
+    dest -- 這就是指針的內容將被複製到目標數組。
+    src -- 這是要複製的字符串。
+    返回值
+    這返回一個指向目標字符串dest
+------------------------------------------------------
+    int strcmp(const char *str1, const char *str2)
+    參數
+    str1 -- 這是第一個要比較的字符串。
+    str2 -- 這是第二個的字符串進行比較。
+    返回值
+    這個函數的返回值如下：
+    如果返回值< 0，則表明str1 小於 str2
+    如果返回值> 0，則表明str1 大於 str2
+    如果返回值= 0，則表明str1 等於 str2
+------------------------------------------------------
+    size_t strlen(const char *str)
+    參數
+    str -- 這是字符串的長度要計算的。
+    返回值
+    這個函數返回字符串的長度。
+------------------------------------------------------
+    void *memset(void *str, int c, size_t n)
+    參數
+    str -- 這是來填充的內存塊的指針。
+    c -- 這是要設置的值。作為一個int值傳遞，但使用這個值的無符號字符型轉換函數填充的內存塊。
+    n -- 這是要設置的值的字節數。
+    返回值
+    這個函數返回一個指針，指向的內存區域str。
+------------------------------------------------------
+    void *memcpy(void *str1, const void *str2, size_t n)
+    參數
+    str1 -- 這是指針數組，其中的內容將被複製到目標，類型強製轉換為void*類型的指針。
+    str2 -- 這是要複製的數據源的指針，void*類型的指針型鑄造。
+    n -- 這是要被複製的字節數。
+    返回值
+    這個函數返回一個指針到目的地，str1。
+------------------------------------------------------
+    int *dynArr;
+    int arrLen = 10;
+    // 配置未初始化的記憶體空間
+    dynArr = malloc(arrLen * sizeof(int));
+
+    int *dynArr2 = realloc(dynArr, sizeof(int) * arrLen * 2); //(原指針, 長度)
+    //若記憶體空間大小是足夠的話，有機會讓dynArr2跟dynArr的記憶體位置相同
+    //不過如果dynArr後面已經沒空間的話，realloc會另外找新的空間給dynArr2，這時候位置可能就會不同。
+==========================================================================================================================================================================================
+6. pointer
+    char s[]="0113256";
+    char *p=s;
+    printf("%c",*p++); //先取值再把p指標位移    //印0值不變再指到s[1]
+    printf("%c",*(p++));//等同*p++   //印1值不變再指到s[2]
+    printf("%c",(*p)++);//先取值再把值+1    //印1值變2一樣指到s[2]
+    printf("%c",*++p); //p指標位移再取值    //指到s[3]後取值
+    printf("%c",*(++p));//等同*++p  //指到s[4]後取值
+    printf("%c",++*p); //*p的值+1後取值 //s[4]值+1後取值
+    printf("%c",++(*p));//同++*p    //再一次s[4]值+1後取值
+    printf("\n%s",s);   
+    //關鍵在於p和++碰在一起就是位移
+    -> 0113234
+    -> 0123456
+------------------------------------------------------------------------------------------------------------
+    int a[] ={1,2,3,4,5,6,7,9};
+    int *ptr = (int*) (&a+1);
+    printf("%d\n", &a);         //26410768
+    printf("%d\n", &a+1);       //26410800 若以&a後面接+1會直接多個長度
+    printf("%d\n", ptr);        //26410800
+    printf("%d\n", *(ptr));     //0 -> the one next to a[]
+    printf("%d\n", ptr-1);      //26410796
+    printf("%d\n", *(ptr-1));   //9 -> a[8-1]
+    printf("%d\n", ptr-2);      //26410792
+    printf("%d\n", *(ptr-2));   //7 -> a[8-2]
+    printf("%d\n", *a);         //1 -> a[0]
+    printf("%d\n", *a+7);       //8 -> a[0]+7
+    printf("%d\n", *(a+7));     //9 -> a[0+7]
+------------------------------------------------------------------------------------------------------------
+    int a[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    int *p = &(a + 1)[3];
+    printf("%d\n", *p);
+    輸出 5
+    因為a+1指向a的第二個元素，[3]表示再向後移動3個元素
+    a+1是跳一個int的大小(a想成指標)
+    &a+1是跳一整個array的大小
+==========================================================================================================================================================================================
+7. const, extern, static, volatile
+    const int *p = a;              //a是一個陣列的首位址.p是指向常量的指標
+        ex: p是指向常量的指標，因此，不可以通過給指標賦值來改變陣列中的資料，例如：
+            // *p = 10;       /*錯誤*/
+            // *(p + 2) = 1;  /*錯誤*/
+    int * const p = a;             //a是一個陣列的首位址.p是指針常量；
+        指標是指向了一個陣列的首位址，那麼，它的位置就不可以改變了。
+        它可以而且只可以改變陣列第一個數據的值。
+        ex: //  *p = 2;          /*可以*/
+            //  *(p+1) = 10;     /*可以*/
+            //  p++;             /*不可以*/
+    const int * const p = a;    //a是一個陣列的首位址。p是指向常量的指標常量
+        ex: //  *p = 2;         /*不可以*/ 
+            //  *(p + 2) = 10;  /*不可以*/
+            //  p++;            /*不可以*/
+------------------------------------------------------------------------------------------------------------
+    static 特性1: 隱藏功能，對於static修飾的"函式和全域性變數"而言
+        當我們同時編譯多個檔案時，所有未加static字首的全域性變數和函式都具有全域性可見性。
+        如果加了static，就會對其它原始檔隱藏
+        利用這一特性可以在不同的檔案中定義同名函式和同名變數，而不必擔心命名衝突。
+    
+    static 特性2: 保持變數內容的持久。
+        儲存在靜態資料區的變數會在程式剛開始執行時就完成初始化，也是"唯一的一次初始化"。
+        共有兩種變數儲存在靜態儲存區：全域性變數和static變數
+        ex: 
+        int fun(void){
+            static int count = 10; // 程式開始到結束只宣告(執行1次)
+            return count--;
+        }
+    
+    static 特性3: 預設初始化為0。其實全域性變數也具備這一屬性，因為全域性變數也儲存在靜態資料區。
+        在靜態資料區，記憶體中所有的位元組預設值都是0x00
+
+    reference: https://www.796t.com/content/1547705175.html
+
+    C/C++ 中 static 放在區域變數之前
+    C/C++ static 放在區域變數之前(該變數宣告在某個函式中)表示該變數離開該作用域(scope)後記憶體還保留著直到程式結束為止，在程式開始時就配置好記憶體，執行到這一行才進行實體化，
+    結論: 有static的參數會一直存在, 直到程式結束
+
+    C/C++ static 放在全域變數之前(該變數不是宣告在某個函式中)是表示在 c/cpp 檔裡該變數無法被其他 c/cpp 檔用 extern 來使用。
+    因為在別支檔 extern 該變數後，就可以在別支檔裡修改這個變數，所以 static 放在全域變數是預防其它人把竄改你的變數，也有保護變數的味道，這就是 static 放在全域變數之前的主要功用。
+------------------------------------------------------------------------------------------------------------
+    extern: 聲明在程序的其它地方使用外部鏈接聲明的對象。
+        聲明：表述對象的名稱和類型。
+        定義：為對象分配存儲空間。
+        extern最重要的用途是多文件程序，c允許程序分散在多個文件中，分別編譯，鏈接到一起。
+        ex: 
+        //main.c
+        extern int a;  //extern一定要加
+        
+        //f.c
+        int a;
+------------------------------------------------------------------------------------------------------------
+    volatile: 隨時都會變的參數需要用volatile來定義(常用在多執行緒) => 有2兩個場合(I/O & multithread program)
+        被 volatile 宣告的變數 將不會使用最佳化編譯
+        有時一個變數的值改變了 compiler 並不會馬上將他寫入記憶體中
+        而會先把結果放在CPU暫存器中 等到處理結束之後 才寫入記憶體
+        若說這個變數是多執行緒的flag 其他的執行緒要透過這個變數來反應
+        而這個值卻又沒有寫入記憶體 這時便會發生bug.
+        1. I/O, 假設有一程式片斷如下: 
+            U8   *pPort;
+            U8   i, j, k;
+            pPort = (U8 *)0x800000;
+            i = *pPort;     
+            j = *pPort;     
+            k = *pPort;  
+            以上的i, j, k很有可能被compiler最佳化而導致產生
+            i = j = k = *pPort; 也就是說只從pPort讀取一次, 而產生 i = j = k 的結果
+            但是原本的程式的目的是要從同一個I/O port讀取3次的值給不同的變數, i, j, k的值很可能不同(例如從此I/O port 讀取溫度)
+            因此i = j = k的結果不是我們所要的... 怎麼辦 => 用volatile
+            volatile U8   *pPort; 告訴compiler, pPort變數具有揮發性的特性, 所以與它有關的程式碼請不要作最佳化動作
+            i = *pPort;     
+            j = *pPort;     
+            k = *pPort; 
+            此三列程式所產生的code, 會真正地從pPort讀取三次, 從而產生正確的結果
+        2. Global variables in Multithread program
+            => 這是在撰寫multithread program時最容易被忽略的一部份
+            => 此原因所造成的bug通常相當難解決(因為不穩定)
+            假設有以下程式片斷, thread 1 & thread 2共用一個global var: gData
+            thread 1:                                thread 2:                                                                                                            
+            ...                                      ....                                
+            int  gData;                              extern int gData;                                                                                                          
+            while (1){                               int  i, j, k;                                                                                                  
+                ....                                 for (i = 0; i < 1000; i++){
+                gData = rand();                         /* A */
+                .....                                   j = gData; 
+            }                                           ....                                                                                 
+            ....                                     }
+            在thread 2的for loop中, 聰明的compiler看到gData的值, 每次都重新從memory load到register, 實在沒效率, 因此會產生如下的code:
+            tmp = gData;
+            for (i = 0; i < 1000; i++           
+            {                                   
+                /* A */
+                j = tmp;                      
+                ....                            
+            }                                                                 
+            也就是gData只讀取一次, 這下子問題來了, 說明如下:
+            .thread 2在執行for loop到j = gData的前一列(A)的時候(假設此時gData=tmp=5), 被切換到thread 1執行
+            .在thread 1的while loop中透過gData = rand(), 對gData做了修改(假設改為1), 再切換回thread 2執行
+            .繼續執行 j = gData, 預期要產生j = 5的結果
+            .但是正確的結果應該是 j = 1 ... 怎麼辦 => 也是用volatile,
+            在thread 1中, 將 
+            int  gData;  
+            改為
+            volatile int  gData;
+
+            在thread 2中, 將
+            extern int  gData;  
+            改為
+            extern volatile int  gData;
+============================================================================================================================================================================
+中斷 (Interrupts)
+中斷是嵌入式系統中重要的組成部分，這導致了很多編譯開發商提供一種擴展－讓標準C支持中斷。
+具代表的事實是，產生了一個新的關鍵字 __interrupt。
+下面的程式碼就使用了__interrupt關鍵字去定義了一個中斷服務次程序(ISR)，請評論一下這段程式碼的。
+
+__interrupt double compute_area(double radius)
+{
+    double area = PI * radius * radius;
+    printf("\nArea = %f"， area);
+    return area;
+}
+
+這個函數有太多的錯誤了，以至讓人不知從何說起了︰
+- ISR 不能返回一個值。如果你不懂這個，那麼你不會被僱用的。
+- ISR 不能傳遞參數。如果你沒有看到這一點，你被僱用的機會等同第一項。
+- 在許多的處理器/編譯器中，浮點一般都是不可重入的。有些處理器/編譯器需要讓多餘的暫存器入棧(PUSH入堆疊)，有些處理器/編譯器就是不允許在ISR中做浮點運算。
+此外，ISR應該是短而有效率的，在ISR中做浮點運算是不明智的。
+- 與第三點一脈相承，printf()經常有重入和性能上的問題。 如果你丟掉了第三和第四點，我不會太為難你的。但如果你能得到後兩點，那麼你的被僱用前景越來越光明了。
+https://blog.xuite.net/tzeng015/twblog/113273005#
+============================================================================================================================================================================
+inline 函式
+    在呼叫函式時會有額外的資源負擔，一些小函式，可以「建議」編譯器設為 inline 行內，若建議被採納，該函式會自動在呼叫點展現為程式碼，例如：
+    inline int power2(int num) {
+        return num * num;
+    }
+    inline 函式只能建議編譯器，建議不一定被採納，例如遞迴函式無法在呼叫點展開，數千行的函式也不適合在呼叫點展開，如果編譯器拒絕將函式展開，會視為一般函式進行編譯，inline 的建議會被忽略。
+
+#define 是巨集，在前置處理器(preprocessor)執行時處理，將要替換的程式碼展開做文字替換。
+
+inline 和 #define 的差別在於：
+    inline 函數只對參數進行一次計算，避免了部分巨集易產生的錯誤。
+    inline 函數的參數類型被檢查，並進行必要的型態轉換。
+    巨集定義盡量不使用於複雜的函數
+    用 inline 後編譯器不一定會實作，僅為建議。
+https://hackmd.io/@a110605/By6DscbVM?type=view
+============================================================================================================================================================================
+#error命令是C/C++語言的預處理命令之一，當預處理器預處理到#error命令時將停止編譯並輸出用戶自定義的錯誤消息。
+example: 
+*檢查編譯此源文件的編譯器是不是C++編譯器
+*如果使用的是C語言編譯器則執行#error命令
+*如果使用的是C++ 編譯器則跳過#error命令
+#ifndef __cplusplus
+#error 親，您當前使用的不是C++編譯器噢！
+#endif
+#include <stdio.h>
+int main()
+{
+    printf("Hello,World!");
+    return 0;
+}
+terminal: gcc *.c => 噴error: 親，您當前使用的不是C++編譯器噢！
+https://baike.baidu.com/item/%23error/2026352
+============================================================================================================================================================================
+高記憶體位置     
+            system：命令列參數與環境變數 system 區段用於儲存一些命令列參數與環境變數，這部分會跟系統有關。
+            stack：區域變數 用於靜態記憶體配置, 大陸翻譯為棧
+未使用區段      --stack區段一般的狀況會從高記憶體位址往低記憶體位址成長，而 heap 剛好從對面以相反的方向成長。                
+            heap：動態配置變數 用於動態記憶體配置, 大陸翻譯為堆 例如 C 語言的 malloc       
+            bss：未初始化靜態變數 是儲存尚未被初始化的靜態變數，而這些變數在程式執行之前會被系統初始化為 0 或是 null。
+            data：初始化靜態變數 初始化資料區段（initialized data segment）儲存的是一些已經初始化的靜態變數，例如有經過初始化的 C 語言的全域變數（global variables）以及
+            靜態變數（static variables）都是儲存於此處。
+            text：程式碼 文字區段（text segment）也稱為程式碼區段（code segment），這裡存放的是可執行的 CPU 指令（instructions）。這個區段通常位於 heap 或 stack 之後，
+            避免因 heap 或 stack 溢位而覆寫 CPU 指令。
+低記憶體位置                
+https://blog.gtwang.org/programming/memory-layout-of-c-program/
+============================================================================================================================================================================
+struct: 結構包含一組有序的數據對象。與數組的元素不同，結構中的數據對象可以具有不同的數據類型。結構中的每個數據對像都是一個成員或字段。
+union: 聯合是一個類似於結構的對象，只是它的所有成員都從內存中的同一位置開始。聯合變量一次只能表示其成員之一的值。
+https://www.ibm.com/docs/en/zos/2.2.0?topic=types-structures-unions
+============================================================================================================================================================================
+動態規劃：dynamic programming
+費氏數列問題 [0, 1, 1, 2, 3, 5, 8, ...] 
+菱形問題
+============================================================================================================================================================================
+OS與計算機組織：
+1. 各種鎖差異、critical section
+2. process、thread
+3. dead lock、race condition
+4. pipeline概念
+5. RAM、register、cache
+OS: 
+    確保 Process 可以正確執行，不會讓 Process 跟 Process 之間互相干擾，
+    並透過 kernel mode 跟 user mode 保護硬體，
+    並提供 high level 的 system call 讓使用者不能直接操作硬體，
+    簡化操作，也更加有效率等。
+program/process/thread
+    Process 是 OS 分配 resource 的單位，相對的 Thread 是 OS 分配 CPU-time 的單位。
+    Process 之間的溝通相對複雜，要嘛是跟 OS 要一塊 Shared Memory，
+    不然就是透過 OS Message passing，
+    而 Thread 之間的溝通相對簡單，只要透過 Global Variable 即可，
+    雖然可能會有些問題（Race Condition）不過整體是比較簡單的，
+    再者 Thread 的切換可能不用轉到 Kernel Mode（看 Thread 如何實作）
+    又 Process 切換需要儲存許多資料到 PCB 而 Thread 相對少，
+    所以 Thread 的 Context Switch 也比 Process 快。
+    Program：
+        放在二次儲存裝置中，尚沒有被Load到記憶體的一堆Code稱之為「程式」。  (也就是還是死的)
+    Process：
+        已經被Load到記憶體中，任何一行Code隨時會被CPU執行，且其宣告的在記憶體的變數的值會隨著需求而不斷變動。稱之為「程序」。(也就是活的Program)
+        一個多工作業系統(Multitasking Operating System)可以同時運行多個Process，然而一個CPU一次只能做一件事情，但CPU的數量永遠少於運行中的Process數，
+        因此每個Process使用的時間需要被排程(Scheduling)
+        又每個Process間在記憶體中，如果擺放的方式不當，就會在記憶體中產生很多沒辦法用到的碎片，因此MemoryManagement是一個問題
+        另外，每個Process所需要的記憶體總合，也可能大於實體記憶體，因此需要另外用二次儲存裝置充當虛擬記憶體(Virtual Memory)，
+        但是二次儲存裝置的速度肯定很慢，因此如何做到對虛擬記憶體最小的依賴，盡量避免Page Fault(電腦在主記憶體中找不到資料，而要去二次記憶體找，就稱為Page Fault)
+        防止Thrashing的發生(因為Virtual Memory演算法不當，造成幾乎每次存取都要依賴二次記憶體，就是Thrashing)，以達到效能最佳化
+    Thread ：
+        在同一個Process底下，有許多自己的分身，就是Thread，中文又翻成執行緒。以往一個Process一次只能做一件事情，因此要一面輸入文字，一面計算字數，
+        這種事情是不可能的。但是有了Thread之後，可以在同一個Process底下，讓輸入文字是一個Thread，計算文字又是另外一個Thread，對CPU來說兩個都是類似
+        一個Process，因此兩個可以同時做。又一個Process底下有數個Thread，而一個Process的Global Variable可以讓它的所有Thread共享，
+        也就是所有Thread都可以存取同一個Process的Global Variable。而每個Thread自己也有自己的專屬Variable。
+        但是，如果有兩個Thread要存取同一個Global Variable，有可能發生問題，也就是說可能會存取到錯的值(例如兩個Thread同時要對一個Variable做加減，
+        最後那個答案可能會是錯的)，這就是Synchronization問題
+        又，每一個Thread之間可能會互搶資源，而造成死結(Deadlock)，只要以下四個條件都滿足就有死結。(1)這個資源不能同時給兩個人用 
+        (2)有一個人拿了一個資源，又想拿別人的資源 (3)如果一個人占了茅坑不拉屎，占用資源很久，仍不能趕他走 
+        (4)A等B，B等C，C等D，D又等A 等成一圈。 要解決這種狀況有Avoid(預防) 或 避免(Prevent)兩種方式，破除以上四種其中一種即可。
+https://hackmd.io/@g9tdU4gDSTiEZrerd0g7-w/SyCXEfsSE?type=view#4
+
+============================================================================================================================================================================
+Write a code to swap integer a, b, without temporary variable.
+method 1 
+    x = x + y;
+    y = x - y;
+    x = x - y;
+method 2
+    x = x * y;
+    y = x / y;
+    x = x / y;
+method 3
+    x = x ^ y; // x now becomes 15 (1111)
+    y = x ^ y; // y becomes 10 (1010)
+    x = x ^ y; // x becomes 5 (0101)
+https://www.geeksforgeeks.org/swap-two-numbers-without-using-temporary-variable/
+============================================================================================================================================================================
+面試題: function pointer: https://ppt.cc/qNDB
+Function pointer
+同時符合
+  1. 具有一樣輸入輸出但是動作不同的functions
+  2. 這些functions有共同的使用時機及規範
+便會考慮用function pointer將這些不同的動作封裝起來。
+example:
+    int doAdd(int a, int b) {
+    return a + b;
+    }   //end doAdd
+
+    int doMinus(int a, int b) {
+    return a - b;
+    }   //end doMinus
+
+    int main(void) {
+    //宣告 function pointer
+    //注意所設定的參數數量與型態
+    int (*my_func_ptr)(int, int);
+
+    //function pointer 指向 doAdd
+    my_func_ptr = doAdd;
+    printf("fp 指向 doAdd => %d\n", (*my_func_ptr)(5, 3));    //結果：8
+
+    //function pointer 指向 doMinus
+    my_func_ptr = doMinus;
+    printf("fp 指向 doMinus => %d\n", (*my_func_ptr)(5, 3));  //結果：2 
+
+    return 0;
+    }   //end main
+
+結合typedef
+typedef int (*MathMethod)(int, int);
+意即把int (*)(int, int)簡化成MathMethod
+example:
+    typedef int (*MathMethod)(int, int); 
+    int Mul(int a, int b){return a*b;}
+    int Divide(int a, int b){return a/b;}
+    int Minus(int a, int b){return a-b;}
+    int Add(int a, int b){return a+b;}
+    int Calc(int x, int y, MathMethod Opt){
+        return Opt(x, y);
+    } 
+    
+    int main(){
+        int a = 8, b = 7;
+        printf("a x b = %d\n", Calc(a, b, Mul)); 
+        printf("a / b = %d\n", Calc(a, b, Divide));
+        printf("a + b = %d\n", Calc(a, b, Add));
+        printf("a - b = %d\n", Calc(a, b, Minus));
+    }
+https://medium.com/@earth875/c-c-%E5%B8%B8%E8%A6%8B%E8%A9%A6%E9%A1%8C-961619b14f88
+============================================================================================================================================================================
+sizeof 不是函式，不會在執行時計算變數或型別的值，而是在編譯時，所有的 sizeof 都被具體的值替換。
+example:
+    size=sizeof(var++);  //sizeof(var++)在編譯時會直接被替換++不會執行
+https://medium.com/@earth875/c-c-%E5%B8%B8%E8%A6%8B%E8%A9%A6%E9%A1%8C-961619b14f88
+============================================================================================================================================================================
+64bit
+sizeof(string)       = 8
+sizeof(char)         = 1
+sizeof(p)            = 8
+sizeof(short)        = 2
+sizeof(int)          = 4
+sizeof(long)         = 8
+sizeof(long long)    = 8
+sizeof(size_t)       = 8
+sizeof(double)       = 8
+sizeof(long double)  = 16
+============================================================================================================================================================================
+32bit
+sizeof(string)       = 4
+sizeof(char)         = 1
+sizeof(p)            = 4  //指標
+sizeof(short)        = 2
+sizeof(int)          = 4  //怕因環境影響程式,絕大多數64,32的編譯器是一樣大
+sizeof(long)         = 4      
+sizeof(long long)    = 8
+sizeof(size_t)       = 4
+sizeof(double)       = 8
+sizeof(long double)  = 12  //看作long+double = 4 + 8 =12
